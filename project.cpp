@@ -3,6 +3,7 @@
 #include<vector>
 #include<fstream>
 #include<sstream>
+#include<ctime>
 
 using namespace std;
 
@@ -11,14 +12,17 @@ class Vehicle {
     string vehicleID;
     string model;
     double rentalRate;
+    int stock;
     public:
-    Vehicle(string id, string m, double r)
-        : vehicleID(id), model(m), rentalRate(r) {
+    Vehicle(string id, string m, double r, int s)
+        : vehicleID(id), model(m), rentalRate(r), stock(s)  {
     }
+    virtual ~Vehicle() {}
     void displayInfo() const {
         cout << "Vehicle ID: " << vehicleID << "|";
         cout << "Model: " << model << "|";
         cout << "Rental Rate: " << rentalRate <<"|"<< endl;
+        cout << "Stock: " << stock << endl;
     }
     double getRentalRate() const {
         return rentalRate;
@@ -29,6 +33,10 @@ class Vehicle {
     string getModel() const {
         return model;
     }
+    int getStock() const {
+        return stock;
+    }
+
 };
 vector<Vehicle> LoadCarData() {
     vector<Vehicle> cars;
@@ -42,8 +50,9 @@ vector<Vehicle> LoadCarData() {
         stringstream ss(line);
         string id, model;
         double rate;
-        ss >> id >> model >> rate;
-        Vehicle car(id, model, rate);
+        int stock; 
+        ss >> id >> model >> rate>> stock;
+        Vehicle car(id, model, rate, stock);
         car.displayInfo();
         cars.push_back(car);
     }
@@ -62,8 +71,9 @@ vector<Vehicle> LoadBikeData() {
         stringstream ss(line);
         string id, model;
         double rate;
-        ss >> id >> model >> rate;
-        Vehicle bike(id, model, rate);
+        int stock;
+        ss >> id >> model >> rate >> stock;
+        Vehicle bike(id, model, rate, stock);
         bike.displayInfo();
         bikes.push_back(bike);
     }
@@ -82,8 +92,9 @@ vector<Vehicle> LoadTruckData() {
         stringstream ss(line);
         string id, model;
         double rate;
-        ss >> id >> model >> rate;
-        Vehicle truck(id, model, rate);
+        int stock;
+        ss >> id >> model >> rate >> stock;
+        Vehicle truck(id, model, rate, stock);
         truck.displayInfo();
         trucks.push_back(truck);
     }
@@ -92,6 +103,7 @@ vector<Vehicle> LoadTruckData() {
 }
 /// @brief Displays the vehicle management menu and handles user interactions for renting vehicles or accessing the admin menu.
 void vehicleMenu() {
+    int choice;
     menu:
     cout << "Welcome to the Vehicle Rental System!" << endl;
     cout << "Press Enter to continue..." << endl;
@@ -102,7 +114,6 @@ void vehicleMenu() {
     cout << "2.Bike" << endl;
     cout << "3.Truck" << endl;
     cout << "4.Admin Menu" << endl;
-    int choice;
     cin >> choice;
     switch(choice) {
         case 1: {
@@ -113,15 +124,18 @@ void vehicleMenu() {
             cin >> vehicleID;
             string selectedModel;
             double rentalRate = 0;
+            int stock;
             bool found = false;
             for (const auto& car : cars) {
                 if (car.getVehicleID() == vehicleID) {
                     selectedModel = car.getModel();
                     rentalRate = car.getRentalRate();
+                    stock = car.getStock();
                     found = true;
                     break;
                 }
             }
+            if( stock > 0){
             if (found) {
                 cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl;
                 cout << "Enter rental duration in days: ";
@@ -153,6 +167,21 @@ void vehicleMenu() {
             } else {
                 cout << "Vehicle not found." << endl;
             }
+            ofstream file("cars.txt", ios::trunc);
+            if (file.is_open()) {
+                for (const auto& car : cars) {
+                    if (car.getVehicleID() == vehicleID) {
+                        file << car.getVehicleID() << " " << car.getModel() << " " << car.getRentalRate() << " " << car.getStock() - 1 << endl;
+                    } else {
+                        file << car.getVehicleID() << " " << car.getModel() << " " << car.getRentalRate() << " " << car.getStock() << endl;
+                    }
+                }
+                file.flush();
+                file.close();
+            } else {
+                cerr << "Error opening file to update stock!" << endl;
+            }
+        }
             break;
         }
         case 2: {
@@ -163,15 +192,17 @@ void vehicleMenu() {
             cin >> vehicleID;
             string selectedModel;
             double rentalRate = 0;
+            int stock;
             bool found = false;
             for (const auto& bike : bikes) {
                 if (bike.getVehicleID() == vehicleID) {
                     selectedModel = bike.getModel();
                     rentalRate = bike.getRentalRate();
+                    stock = bike.getStock();
                     found = true;
                     break;
                 }
-            }
+            }if(stock>0){
             if (found) {
                 cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl;
                 cout << "Enter rental duration in days: ";
@@ -204,6 +235,22 @@ void vehicleMenu() {
             } else {
                 cout << "Vehicle not found." << endl;
             }
+            ofstream file("bikes.txt", ios::trunc);
+            if (file.is_open()) {
+                for (const auto& bike : bikes) {
+                    if (bike.getVehicleID() == vehicleID) {
+                        file << bike.getVehicleID() << " " << bike.getModel() << " " << bike.getRentalRate() << " " << bike.getStock() - 1 << endl;
+                    } else {
+                        file << bike.getVehicleID() << " " << bike.getModel() << " " << bike.getRentalRate() << " " << bike.getStock() << endl;
+                    }
+                }
+                file.flush();
+                file.close();
+            } else {
+                cerr << "Error opening file to update stock!" << endl;
+            }
+
+        }
             break;
         }
         case 3: {
@@ -214,15 +261,17 @@ void vehicleMenu() {
             cin >> vehicleID;
             string selectedModel;
             double rentalRate = 0;
+            int stock;
             bool found = false;
             for (const auto& truck : trucks) {
                 if (truck.getVehicleID() == vehicleID) {
                     selectedModel = truck.getModel();
                     rentalRate = truck.getRentalRate();
+                    stock = truck.getStock();
                     found = true;
                     break;
                 }
-            }
+            }if(stock>0){
             if (found) {
                 cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl;
                 cout << "Enter rental duration in days: ";
@@ -254,6 +303,22 @@ void vehicleMenu() {
             } else {
                 cout << "Vehicle not found." << endl;
             }
+            ofstream file("trucks.txt", ios::trunc);
+            if (file.is_open()) {
+                for (const auto& truck : trucks) {
+                    if (truck.getVehicleID() == vehicleID) {
+                        file << truck.getVehicleID() << " " << truck.getModel() << " " << truck.getRentalRate() << " " << truck.getStock() - 1 << endl;
+                    } else {
+                        file << truck.getVehicleID() << " " << truck.getModel() << " " << truck.getRentalRate() << " " << truck.getStock() << endl;
+                    }
+                }
+                file.flush();
+                file.close();
+            } else {
+                cerr << "Error opening file to update stock!" << endl;
+            }
+
+        }
             break;
         }
         case 4: {
@@ -265,11 +330,17 @@ void vehicleMenu() {
             cout << "Password: ";
             string password;
             cin >> password;
-            if (username == "nautical" && password == "12345678") {
-                cout << "Access granted. Welcome, admin!" << endl;
+            if (username == "Employee" && password == "12345678" || username == "Manager" && password =="manager123" || 
+                username == "Nautical" && password == "nautyc06" ) {
+                cout << "Access granted. Welcome,"<<username <<"!" << endl<< endl;
+                cout << "-------------------------------"<<endl <<endl;
                 ofstream file("admin_log.txt", ios::app);
+                time_t now = time(nullptr);
+                char buf[20];
+                strftime(buf,sizeof(buf),"%Y-%m-%d|%H:%M:%S",localtime(&now));
                 if (file.is_open()) {
                     file << "Admin accessed the system." << endl;
+                    file << "------"<<"[ "<<buf<<" ]"<<"-------"<< endl;
                     file <<"Username: " << username << endl;
                     file << "Password: " << password << endl;
                     file << "-----------------------------" << endl;
@@ -292,8 +363,6 @@ void vehicleMenu() {
 }
 int main() {
     vehicleMenu();
-
-
 
     return 0;
 }

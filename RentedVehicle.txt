@@ -1,0 +1,14 @@
+Renter Name: naval
+Contact Number: 1234567890
+Vehicle ID: C001
+Model: Toyota_Camry
+Rental Duration (days): 10
+Total Rental Cost: $455
+-----------------------------
+Renter Name: munswif
+Contact Number: 123687545
+Vehicle ID: C017
+Model: Porsche_911
+Rental Duration (days): 7
+Total Rental Cost: $1050
+-----------------------------
