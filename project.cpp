@@ -23,6 +23,12 @@ class Vehicle {
     double getRentalRate() const {
         return rentalRate;
     }
+    string getVehicleID() const {
+        return vehicleID;
+    }
+    string getModel() const {
+        return model;
+    }
 };
 vector<Vehicle> LoadCarData() {
     vector<Vehicle> cars;
@@ -86,6 +92,11 @@ vector<Vehicle> LoadTruckData() {
 }
 /// @brief Displays the vehicle management menu and handles user interactions for renting vehicles or accessing the admin menu.
 void vehicleMenu() {
+    menu:
+    cout << "Welcome to the Vehicle Rental System!" << endl;
+    cout << "Press Enter to continue..." << endl;
+    cin.ignore();
+
     cout << "---Vehicle Management Menu---" << endl;
     cout << "1.Car" << endl;
     cout << "2.Bike" << endl;
@@ -100,20 +111,48 @@ void vehicleMenu() {
             cout<< "select a vehicle to rent (enter vehicle ID): ";
             string vehicleID;
             cin >> vehicleID;
-            cout << "You have selected vehicle ID: " << vehicleID << ". Proceeding to rental process..." << endl;
-            cout << "Enter rental duration in days: ";
-            int days;
-            cin >> days;
-            cout << "Calculating rental cost for " << days << " days..." << endl;
+            string selectedModel;
             double rentalRate = 0;
+            bool found = false;
             for (const auto& car : cars) {
-                if (car.getRentalRate() > 0) {
+                if (car.getVehicleID() == vehicleID) {
+                    selectedModel = car.getModel();
                     rentalRate = car.getRentalRate();
+                    found = true;
                     break;
                 }
             }
-            double TotalRate=days*rentalRate;
-            cout << "Total rental cost: $" << TotalRate << endl;
+            if (found) {
+                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl;
+                cout << "Enter rental duration in days: ";
+                int days;
+                cin >> days;
+                cout << "Calculating rental cost for " << days << " days..." << endl;
+                double TotalRate = days * rentalRate;
+                cout << "Total rental cost: $" << TotalRate << endl;
+                cout << "Enter name for the rental agreement: ";
+                string renterName;
+                cin >> renterName;
+                cout << "Enter contact number: " << endl;
+                string contactNumber;
+                cin >> contactNumber;
+                ofstream file("RentedVehicle.txt", ios::app);
+                if (file.is_open()) {
+                    file << "Renter Name: " << renterName << endl;
+                    file << "Contact Number: " << contactNumber << endl;
+                    file << "Vehicle ID: " << vehicleID << endl;
+                    file << "Model: " << selectedModel << endl;
+                    file << "Rental Duration (days): " << days << endl;
+                    file << "Total Rental Cost: $" << TotalRate << endl;
+                    file << "-----------------------------" << endl;
+                    file.flush();
+                    file.close();
+                } else {
+                    cerr << "Error opening rental log file!" << endl;
+                }
+            } else {
+                cout << "Vehicle not found." << endl;
+            }
             break;
         }
         case 2: {
@@ -122,42 +161,99 @@ void vehicleMenu() {
             cout<< "select a vehicle to rent (enter vehicle ID): ";
             string vehicleID;
             cin >> vehicleID;
-            cout << "You have selected vehicle ID: " << vehicleID << ". Proceeding to rental process..." << endl;
-            cout << "Enter rental duration in days: ";
-            int days;
-            cin >> days;
-            cout << "Calculating rental cost for " << days << " days..." << endl;
+            string selectedModel;
             double rentalRate = 0;
+            bool found = false;
             for (const auto& bike : bikes) {
-                if (bike.getRentalRate() > 0) {
+                if (bike.getVehicleID() == vehicleID) {
+                    selectedModel = bike.getModel();
                     rentalRate = bike.getRentalRate();
+                    found = true;
                     break;
                 }
             }
-            double TotalRate=days*rentalRate;
-            cout << "Total rental cost: $" << TotalRate << endl;
+            if (found) {
+                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl;
+                cout << "Enter rental duration in days: ";
+                int days;
+                cin >> days;
+                cout << "Calculating rental cost for " << days << " days..." << endl;
+                double TotalRate = days * rentalRate;
+                cout << "Total rental cost: $" << TotalRate << endl;
+                cout << "Enter name for the rental agreement: ";
+                string renterName;
+                cin >> renterName;
+                cout << "Enter contact number: " << endl;
+                string contactNumber;
+                cin >> contactNumber;
+                ofstream file("RentedVehicle.txt", ios::app);
+                if (file.is_open()) {
+                    file << "Renter Name: " << renterName << endl;
+                    file << "Contact Number: " << contactNumber << endl;
+                    file << "Vehicle ID: " << vehicleID << endl;
+                    file << "Model: " << selectedModel << endl;
+                    file << "Rental Duration (days): " << days << endl;
+                    file << "Total Rental Cost: $" << TotalRate << endl;
+                    file << "-----------------------------" << endl;
+                    file.flush();
+                    file.close();
+                } else {
+                    cerr << "Error opening rental log file!" << endl;
+                }
+
+            } else {
+                cout << "Vehicle not found." << endl;
+            }
             break;
         }
         case 3: {
             cout << "Truck selected." << endl;
             vector<Vehicle> trucks = LoadTruckData();
             cout<< "select a vehicle to rent (enter vehicle ID): ";
-            string vehicleID; 
+            string vehicleID;
             cin >> vehicleID;
-            cout << "You have selected vehicle ID: " << vehicleID << ". Proceeding to rental process..." << endl;
-            cout << "Enter rental duration in days: ";
-            int days;   
-            cin >> days;
-            cout << "Calculating rental cost for " << days << " days..." << endl;
+            string selectedModel;
             double rentalRate = 0;
+            bool found = false;
             for (const auto& truck : trucks) {
-                if (truck.getRentalRate() > 0) {
+                if (truck.getVehicleID() == vehicleID) {
+                    selectedModel = truck.getModel();
                     rentalRate = truck.getRentalRate();
+                    found = true;
                     break;
                 }
             }
-            double TotalRate=days*rentalRate;
-            cout << "Total rental cost: $" << TotalRate << endl;   
+            if (found) {
+                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl;
+                cout << "Enter rental duration in days: ";
+                int days;
+                cin >> days;
+                cout << "Calculating rental cost for " << days << " days..." << endl;
+                double TotalRate = days * rentalRate;
+                cout << "Total rental cost: $" << TotalRate << endl;
+                cout << "Enter name for the rental agreement: ";
+                string renterName;
+                cin >> renterName;
+                cout << "Enter contact number: " << endl;
+                string contactNumber;
+                cin >> contactNumber;
+                ofstream file("RentedVehicle.txt", ios::app);
+                if (file.is_open()) {
+                    file << "Renter Name: " << renterName << endl;
+                    file << "Contact Number: " << contactNumber << endl;
+                    file << "Vehicle ID: " << vehicleID << endl;
+                    file << "Model: " << selectedModel << endl;
+                    file << "Rental Duration (days): " << days << endl;
+                    file << "Total Rental Cost: $" << TotalRate << endl;
+                    file << "-----------------------------" << endl;
+                    file.flush();
+                    file.close();
+                } else {
+                    cerr << "Error opening rental log file!" << endl;
+                }
+            } else {
+                cout << "Vehicle not found." << endl;
+            }
             break;
         }
         case 4: {
@@ -171,6 +267,17 @@ void vehicleMenu() {
             cin >> password;
             if (username == "nautical" && password == "12345678") {
                 cout << "Access granted. Welcome, admin!" << endl;
+                ofstream file("admin_log.txt", ios::app);
+                if (file.is_open()) {
+                    file << "Admin accessed the system." << endl;
+                    file <<"Username: " << username << endl;
+                    file << "Password: " << password << endl;
+                    file << "-----------------------------" << endl;
+                    file.flush();
+                    file.close();
+                } else {
+                    cerr << "Error opening log file!" << endl;
+                }
             } else {
                 cout << "Access denied. Invalid credentials." << endl;
             }
@@ -179,10 +286,14 @@ void vehicleMenu() {
         default:
             cout << "Invalid choice. Please try again." << endl;
     }
+    goto menu;
 
 
 }
 int main() {
     vehicleMenu();
+
+
+
     return 0;
 }
