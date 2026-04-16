@@ -1,7 +1,6 @@
 # OOPSproject
 ## Project Description
 
-<<<<<<< HEAD
 Vehicle Rental Management System (v2.0)
 Project Overview
 The Vehicle Rental Management System is a terminal-based C++ application designed to manage the lifecycle of vehicle rentals. The system provides a dual-interface approach: a customer-facing portal for renting and returning vehicles, and an administrative dashboard for inventory control, financial auditing, and security logging.
