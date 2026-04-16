@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -109,23 +111,43 @@ vector<Vehicle> LoadTruckData()
     return trucks;
 }
 
+void loadingBar() {
+    cout << "-";
+    for (int i = 0; i < 20; ++i) {
+        cout << "-" << flush;
+        this_thread::sleep_for(chrono::milliseconds(150));
+    }
+    cout << "-" << endl;
+}
+
+void delay(int dt) {
+    cout << "";
+    for (int i = 0; i < 20; ++i) {
+        cout << " " << flush;
+        this_thread::sleep_for(chrono::milliseconds(dt));
+    }
+    cout << "" << endl;
+}
+
 void vehicleMenu()
 {
     int choice;
     bool running = true;
     while (running)
     {
-        cout << "Welcome to the Vehicle Rental System!" << endl;
-        cout << "Press Enter to continue..." << endl;
-        cin.ignore();
-
+    
+        cout <<"\nWelcome to the Vehicle Rental System!" << endl;
+        cout << "-----------------------------"<< endl;
         cout << "---Vehicle Management Menu---" << endl;
         cout << "1.Car" << endl;
         cout << "2.Bike" << endl;
         cout << "3.Truck" << endl;
         cout << "4.Return Vehicle" << endl;
         cout << "5.Admin Menu" << endl;
-        
+        cout << "------------------------------" << endl
+             << endl;
+        cout << "Enter your choice: ";
+
         if (!(cin >> choice))
         {
             cout << "Invalid input. Please enter a number." << endl;
@@ -133,12 +155,14 @@ void vehicleMenu()
             cin.ignore(1000, '\n');
             continue;
         }
-
+        delay(100);
         switch (choice)
         {
         case 1:
+
         {
-            cout << "Car selected." << endl;
+            cout << "Car selected." << endl
+                 << endl;
             vector<Vehicle> cars = LoadCarData();
             cout << "select a vehicle to rent (enter vehicle ID): ";
             string vehicleID;
@@ -160,12 +184,14 @@ void vehicleMenu()
             }
             if (found && stock > 0)
             {
-                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl;
+                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl
+                     << endl;
                 cout << "Enter rental duration in days: ";
                 int days;
                 cin >> days;
                 double TotalRate = days * rentalRate;
-                cout << "Total rental cost: $" << TotalRate << endl;
+                cout << "Total rental cost: $" << TotalRate << endl
+                     << endl;
                 cout << "Enter name for the rental agreement: ";
                 string renterName;
                 cin >> renterName;
@@ -205,7 +231,8 @@ void vehicleMenu()
         }
         case 2:
         {
-            cout << "Bike selected." << endl;
+            cout << "Bike selected." << endl
+                 << endl;
             vector<Vehicle> bikes = LoadBikeData();
             cout << "select a vehicle to rent (enter vehicle ID): ";
             string vehicleID;
@@ -227,19 +254,35 @@ void vehicleMenu()
             }
             if (found && stock > 0)
             {
+                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl
+                     << endl;
                 cout << "Enter rental duration in days: ";
                 int days;
                 cin >> days;
                 double TotalRate = days * rentalRate;
-                cout << "Total rental cost: $" << TotalRate << endl;
-                cout << "Enter name: ";
+                cout << "Total rental cost: $" << TotalRate << endl
+                     << endl;
+                cout << "Enter name for the rental agreement: ";
                 string renterName; cin >> renterName;
-                cout << "Enter contact: ";
-                string contact; cin >> contact;
+                cout << "Enter contact number: ";
+                string contactNumber;
+                cin >> contactNumber;
 
                 ofstream file("RentedVehicle.txt", ios::app);
-                file << "Renter: " << renterName << "\nVehicle: " << vehicleID << "\nCost: $" << TotalRate << "\n---\n";
-                file.close();
+                if (file.is_open())
+                {
+                    file << "Renter Name: " << renterName << endl;
+                    file << "Contact Number: " << contactNumber << endl;
+                    file << "Vehicle ID: " << vehicleID << endl;
+                    file << "Model: " << selectedModel << endl;
+                    file << "Rental Duration (days): " << days << endl;
+                    file << "Total Rental Cost: $" << TotalRate << endl;
+                    time_t now = time(nullptr);
+                    char *dt = ctime(&now);
+                    file << "Rental Date: " << dt;
+                    file << "-----------------------------" << endl;
+                    file.close();
+                }
 
                 ofstream updateFile("bikes.txt", ios::trunc);
                 for (const auto &bike : bikes)
@@ -257,7 +300,61 @@ void vehicleMenu()
             vector<Vehicle> trucks = LoadTruckData();
             cout << "select a vehicle ID: ";
             string vehicleID; cin >> vehicleID;
-            // Logic similar to case 1/2... 
+            string selectedModel;
+            double rentalRate = 0;
+            int stock = 0;
+            bool found = false;
+            for (const auto &truck : trucks)
+            {
+                if (truck.getVehicleID() == vehicleID)
+                {
+                    selectedModel = truck.getModel();
+                    rentalRate = truck.getRentalRate();
+                    stock = truck.getStock();
+                    found = true;
+                    break;
+                }
+            }
+            if (found && stock > 0)
+            {
+                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl
+                     << endl;
+                cout << "Enter rental duration in days: ";
+                int days;
+                cin >> days;
+                double TotalRate = days * rentalRate;
+                cout << "Total rental cost: $" << TotalRate << endl
+                     << endl;
+                cout << "Enter name for the rental agreement: ";
+                string renterName; cin >> renterName;
+                cout << "Enter contact number: ";
+                string contactNumber;
+                cin >> contactNumber;
+
+                ofstream file("RentedVehicle.txt", ios::app);
+                if (file.is_open())
+                {
+                    file << "Renter Name: " << renterName << endl;
+                    file << "Contact Number: " << contactNumber << endl;
+                    file << "Vehicle ID: " << vehicleID << endl;
+                    file << "Model: " << selectedModel << endl;
+                    file << "Rental Duration (days): " << days << endl;
+                    file << "Total Rental Cost: $" << TotalRate << endl;
+                    time_t now = time(nullptr);
+                    char *dt = ctime(&now);
+                    file << "Rental Date: " << dt;
+                    file << "-----------------------------" << endl;
+                    file.close();
+                }
+
+                ofstream updateFile("trucks.txt", ios::trunc);
+                for (const auto &truck : trucks)
+                {
+                    int finalStock = (truck.getVehicleID() == vehicleID) ? truck.getStock() - 1 : truck.getStock();
+                    updateFile << truck.getVehicleID() << " " << truck.getModel() << " " << truck.getRentalRate() << " " << finalStock << endl;
+                }
+                updateFile.close();
+            }
             break;
         }
         case 4:
@@ -265,6 +362,15 @@ void vehicleMenu()
             cout << "Return Vehicle selected. Enter ID: ";
             string vehicleID;
             cin >> vehicleID;
+
+            ofstream rentalFile("ReturnedVehicle.txt", ios::app);
+            rentalFile << "Returned Vehicle ID: " << vehicleID << endl;
+            time_t now = time(nullptr);
+            char *dt = ctime(&now);
+            rentalFile << "Return Date: " << dt;
+            rentalFile << "-----------------------------" << endl;
+            rentalFile.close();
+
             if (vehicleID.substr(0, 3) == "CAR")
             {
                 vector<Vehicle> cars = LoadCarData();
@@ -276,8 +382,29 @@ void vehicleMenu()
                 }
                 file.close();
             }
-            // Add BIKE/TRUCK logic here similarly
-            cout << "Vehicle returned." << endl;
+                else if (vehicleID.substr(0, 4) == "BIKE")
+                {
+                    vector<Vehicle> bikes = LoadBikeData();
+                    ofstream file("bikes.txt", ios::trunc);
+                    for (const auto &bike : bikes)
+                    {
+                        int newStock = (bike.getVehicleID() == vehicleID) ? bike.getStock() + 1 : bike.getStock();
+                        file << bike.getVehicleID() << " " << bike.getModel() << " " << bike.getRentalRate() << " " << newStock << endl;
+                    }
+                    file.close();
+                }
+                else if (vehicleID.substr(0, 5) == "TRUCK")
+                {
+                    vector<Vehicle> trucks = LoadTruckData();
+                    ofstream file("trucks.txt", ios::trunc);
+                    for (const auto &truck : trucks)
+                    {
+                        int newStock = (truck.getVehicleID() == vehicleID) ? truck.getStock() + 1 : truck.getStock();
+                        file << truck.getVehicleID() << " " << truck.getModel() << " " << truck.getRentalRate() << " " << newStock << endl;
+                    }
+                    file.close();
+                }
+            cout << "ThankYou for returning the vehicle." << endl;
             break;
         }
         case 5:
@@ -332,13 +459,30 @@ void vehicleMenu()
             break;
         }
         default:
+        {
             cout << "Invalid choice." << endl;
         }
+        }
+        loadingBar();
+        cout << "Do you want to continue? (y/n): ";
+        char cont;
+        cin >> cont;
+        if (cont == 'n' || cont == 'N') { running = false; }
     }
+
+}
+
+void ThankYouMessage()
+{
+    delay(100);
+    cout << "\nThank you for using the Vehicle Rental System!" << endl;
+    cout << "Have a great day!" << endl;
 }
 
 int main()
 {
+    loadingBar();
     vehicleMenu();
+    ThankYouMessage();
     return 0;
 }
