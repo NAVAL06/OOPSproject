@@ -3,7 +3,7 @@ C002 Honda_Civic 38 3
 C003 Ford_F-150 55.25 6
 C004 Tesla_Model_3 65 7
 C005 Chevrolet_Silverado 52.75 1
-C006 BMW_3_Series 70.4 6
+C006 BMW_3_Series 70.4 5
 C007 Audi_A4 62.15 7
 C008 Mercedes_C-Class 75 9
 C009 Nissan_Altima 35.9 2
