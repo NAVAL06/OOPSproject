@@ -1,4 +1,4 @@
-C001 Toyota_Camry 45.5 2
+C001 Toyota_Camry 45.5 1
 C002 Honda_Civic 38 3
 C003 Ford_F-150 55.25 6
 C004 Tesla_Model_3 65 7

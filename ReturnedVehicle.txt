@@ -1,0 +1,4 @@
+Returned Vehicle ID: C001
+Renter Name: Naval
+Return Date: Mon Apr 20 21:51:06 2026
+-----------------------------

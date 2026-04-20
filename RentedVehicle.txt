@@ -1,56 +1,9 @@
+Ticket: C1041
 Renter Name: Naval
-Contact Number: 48629847
 Vehicle ID: C001
+Contact Number: 470294772
 Model: Toyota_Camry
-Rental Duration (days): 7
-Total Rental Cost: $318.5
-Rental Date: Thu Apr 16 23:32:43 2026
------------------------------
-Renter Name: Shiras
-Contact Number: 487299583
-Vehicle ID: C013
-Model: Volkswagen_Golf
-Rental Duration (days): 5
-Total Rental Cost: $197.25
-Rental Date: Thu Apr 16 23:42:57 2026
------------------------------
-Renter Name: Sooraj
-Contact Number: 48957829
-Vehicle ID: T019
-Model: Tesla_Cybertruck
 Rental Duration (days): 10
-Total Rental Cost: $1300
-Rental Date: Fri Apr 17 00:12:27 2026
------------------------------
-Renter Name: naval
-Contact Number: 385869959
-Vehicle ID: C001
-Model: Toyota_Camry
-Rental Duration (days): 7
-Total Rental Cost: $318.5
-Rental Date: Fri Apr 17 00:27:21 2026
------------------------------
-Renter Name: Zidan
-Contact Number: 890203992
-Vehicle ID: B002
-Model: Harley_Iron883
-Rental Duration (days): 2
-Total Rental Cost: $190
-Rental Date: Fri Apr 17 00:32:23 2026
------------------------------
-Renter Name: Ramees
-Contact Number: 499582003
-Vehicle ID: C008
-Model: Mercedes_C-Class
-Rental Duration (days): 4
-Total Rental Cost: $300
-Rental Date: Fri Apr 17 00:36:08 2026
------------------------------
-Renter Name: Chandru
-Contact Number: 9900288751
-Vehicle ID: B007
-Model: BMW_S1000RR
-Rental Duration (days): 8
-Total Rental Cost: $1084
-Rental Date: Fri Apr 17 00:37:39 2026
+Total Rental Cost: $455
+Rental Date: Mon Apr 20 21:44:38 2026
 -----------------------------
