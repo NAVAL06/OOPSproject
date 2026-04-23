@@ -1,9 +1,0 @@
-Ticket: C1041
-Renter Name: Naval
-Vehicle ID: C001
-Contact Number: 470294772
-Model: Toyota_Camry
-Rental Duration (days): 10
-Total Rental Cost: $455
-Rental Date: Mon Apr 20 21:44:38 2026
------------------------------

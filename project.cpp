@@ -37,7 +37,7 @@ public:
     int getStock() const { return stock; }
 };
 
-vector<Vehicle> LoadCarData()
+vector<Vehicle> LoadCarData(bool display = false)
 {
     vector<Vehicle> cars;
     ifstream file("cars.txt");
@@ -55,14 +55,17 @@ vector<Vehicle> LoadCarData()
         int stock;
         ss >> id >> model >> rate >> stock;
         Vehicle car(id, model, rate, stock);
-        car.displayInfo();
+        if (display)
+        {
+            car.displayInfo();
+        }
         cars.push_back(car);
     }
     file.close();
     return cars;
 }
 
-vector<Vehicle> LoadBikeData()
+vector<Vehicle> LoadBikeData(bool display = false)
 {
     vector<Vehicle> bikes;
     ifstream file("bikes.txt");
@@ -80,14 +83,17 @@ vector<Vehicle> LoadBikeData()
         int stock;
         ss >> id >> model >> rate >> stock;
         Vehicle bike(id, model, rate, stock);
-        bike.displayInfo();
+        if (display)
+        {
+            bike.displayInfo();
+        }
         bikes.push_back(bike);
     }
     file.close();
     return bikes;
 }
 
-vector<Vehicle> LoadTruckData()
+vector<Vehicle> LoadTruckData(bool display = false)
 {
     vector<Vehicle> trucks;
     ifstream file("trucks.txt");
@@ -105,7 +111,10 @@ vector<Vehicle> LoadTruckData()
         int stock;
         ss >> id >> model >> rate >> stock;
         Vehicle truck(id, model, rate, stock);
-        truck.displayInfo();
+        if (display)
+        {
+            truck.displayInfo();
+        }
         trucks.push_back(truck);
     }
     file.close();
@@ -125,7 +134,7 @@ void loadingBar()
 
 void delay(int dt)
 {
-    cout << "";
+    cout << "\n";
     for (int i = 0; i < 20; ++i)
     {
         cout << "." << flush;
@@ -168,7 +177,7 @@ void vehicleMenu()
         {
             cout << "Car selected." << endl
                  << endl;
-            vector<Vehicle> cars = LoadCarData();
+            vector<Vehicle> cars = LoadCarData(true);
             cout << "select a vehicle to rent (enter vehicle ID): ";
             string vehicleID;
             cin >> vehicleID;
@@ -206,7 +215,7 @@ void vehicleMenu()
                 int ticket = rand() % 9000 + 1000;
                 cout << "Making A ticket For You ";
                 delay(50);
-                cout << "Your Ticket No: C" << ticket <<endl;
+                cout << "Your Ticket No: C" << ticket << endl;
 
                 ofstream file("RentedVehicle.txt", ios::app);
                 if (file.is_open())
@@ -243,7 +252,7 @@ void vehicleMenu()
         {
             cout << "Bike selected." << endl
                  << endl;
-            vector<Vehicle> bikes = LoadBikeData();
+            vector<Vehicle> bikes = LoadBikeData(true);
             cout << "select a vehicle to rent (enter vehicle ID): ";
             string vehicleID;
             cin >> vehicleID;
@@ -281,7 +290,7 @@ void vehicleMenu()
                 int ticket = rand() % 9000 + 1000;
                 cout << "Making A ticket For You ";
                 delay(50);
-                cout << "Your Ticket No: B" << ticket <<endl;
+                cout << "Your Ticket No: B" << ticket << endl;
 
                 ofstream file("RentedVehicle.txt", ios::app);
                 if (file.is_open())
@@ -313,7 +322,7 @@ void vehicleMenu()
         case 3:
         {
             cout << "Truck selected." << endl;
-            vector<Vehicle> trucks = LoadTruckData();
+            vector<Vehicle> trucks = LoadTruckData(true);
             cout << "select a vehicle ID: ";
             string vehicleID;
             cin >> vehicleID;
@@ -351,7 +360,7 @@ void vehicleMenu()
                 int ticket = rand() % 9000 + 1000;
                 cout << "Making A ticket For You ";
                 delay(50);
-                cout << "Your Ticket No: T" << ticket <<endl;
+                cout << "Your Ticket No: T" << ticket << endl;
 
                 ofstream file("RentedVehicle.txt", ios::app);
                 if (file.is_open())
@@ -387,7 +396,7 @@ void vehicleMenu()
             cin >> ticketNo;
             ifstream rentalFile("RentedVehicle.txt");
             string line;
-            string renterName,vehicleID;
+            string renterName, vehicleID;
             bool found = false;
             while (getline(rentalFile, line))
             {
@@ -400,22 +409,47 @@ void vehicleMenu()
             if (!found)
             {
                 cout << "Ticket not found." << endl;
-                return;
+                break;
             }
-            ifstream details("RentedVehicle.txt");
-            while (getline(details,line)){
-                if(line.find("Ticket: " + ticketNo) != string::npos ){
-                    while(getline(details,line) && !line.empty()){
-                        if(line.find("Renter Name: ") != string::npos){
-                            renterName = line.substr(line.find(": ")+2);
-                        }
-                        else if(line.find("Vehicle ID: ") != string::npos){
-                            vehicleID = line.substr(line.find(": ")+2);
-                        }
-                    }
 
+            ifstream details("RentedVehicle.txt");
+            vector<string> remainingTickets;
+            bool skipTicket = false;
+
+            while (getline(details, line))
+            {
+                if (line.find("Ticket: " + ticketNo) != string::npos)
+                {
+                    skipTicket = true;
+                }
+
+                if (skipTicket)
+                {
+                    if (line.find("Renter Name: ") != string::npos)
+                    {
+                        renterName = line.substr(line.find(": ") + 2);
+                    }
+                    else if (line.find("Vehicle ID: ") != string::npos)
+                    {
+                        vehicleID = line.substr(line.find(": ") + 2);
+                    }
+                    if (line.find("-----------------------------") != string::npos)
+                    {
+                        skipTicket = false;
+                    }
+                }
+                else
+                {
+                    remainingTickets.push_back(line);
                 }
             }
+            details.close();
+            ofstream rewriteFile("RentedVehicle.txt", ios::trunc);
+            for (const string &l : remainingTickets)
+            {
+                rewriteFile << l << endl;
+            }
+            rewriteFile.close();
             ofstream returnFile("ReturnedVehicle.txt", ios::app);
             returnFile << "Returned Vehicle ID: " << vehicleID << endl;
             returnFile << "Renter Name: " << renterName << endl;
@@ -424,9 +458,9 @@ void vehicleMenu()
             returnFile << "Return Date: " << dt;
             returnFile << "-----------------------------" << endl;
             returnFile.close();
-            if (vehicleID.substr(0, 3) == "CAR")
+            if (vehicleID.substr(0, 1) == "C")
             {
-                vector<Vehicle> cars = LoadCarData();
+                vector<Vehicle> cars = LoadCarData(false);
                 ofstream file("cars.txt", ios::trunc);
                 for (const auto &car : cars)
                 {
@@ -435,9 +469,9 @@ void vehicleMenu()
                 }
                 file.close();
             }
-            else if (vehicleID.substr(0, 4) == "BIKE")
+            else if (vehicleID.substr(0, 1) == "B")
             {
-                vector<Vehicle> bikes = LoadBikeData();
+                vector<Vehicle> bikes = LoadBikeData(false);
                 ofstream file("bikes.txt", ios::trunc);
                 for (const auto &bike : bikes)
                 {
@@ -446,9 +480,9 @@ void vehicleMenu()
                 }
                 file.close();
             }
-            else if (vehicleID.substr(0, 5) == "TRUCK")
+            else if (vehicleID.substr(0, 1) == "T")
             {
-                vector<Vehicle> trucks = LoadTruckData();
+                vector<Vehicle> trucks = LoadTruckData(false);
                 ofstream file("trucks.txt", ios::trunc);
                 for (const auto &truck : trucks)
                 {
@@ -457,84 +491,117 @@ void vehicleMenu()
                 }
                 file.close();
             }
-            cout << "ThankYou for returning the vehicle"<< renterName << endl;
+            cout << "ThankYou for returning the vehicle" << renterName << endl;
             break;
-        }     
+        }
         case 5:
-    {
-        string username, password;
-        cout << "Username: ";
-        cin >> username;
-        cout << "Password: ";
-        cin >> password;
-
-        if ((username == "Employee" && password == "12345678") ||
-            (username == "Manager" && password == "manager123") ||
-            (username == "Nautical" && password == "nautyc06"))
         {
-            cout << "Access granted." << endl;
-            cout << "1.Records\n 2.Inventory\n 3.Add\n 4.Remove\n 5.Revenue\n 6.Logout" << endl;
-            int AdminChoice;
-            cin >> AdminChoice;
+            string username, password;
+            cout << "Username: ";
+            cin >> username;
+            cout << "Password: ";
+            cin >> password;
 
-            switch (AdminChoice)
+            if ((username == "Employee" && password == "12345678") ||
+                (username == "Manager" && password == "manager123") ||
+                (username == "Nautical" && password == "nautyc06"))
             {
-            case 1:
-            {
-                ifstream rentalFile("RentedVehicle.txt");
-                string record;
-                while (getline(rentalFile, record))
-                    cout << record << endl;
-                rentalFile.close();
-                break;
-            }
-            case 2:
-            {
-                LoadCarData();
-                LoadBikeData();
-                LoadTruckData();
-                break;
-            }
-            case 5:
-            {
-                double totalRevenue = 0;
-                ifstream rentalFile("RentedVehicle.txt");
-                string line;
-                while (getline(rentalFile, line))
+                cout << "Access granted." << endl;
+                cout << " 1.Records\n 2.Inventory\n 3.Add\n 4.Remove\n 5.Revenue\n 6.Logout" << endl;
+                int AdminChoice;
+                cin >> AdminChoice;
+                do
                 {
-                    if (line.find("Total Rental Cost: $") != string::npos)
+                    switch (AdminChoice)
                     {
-                        totalRevenue += stod(line.substr(line.find("$") + 1));
+                    case 1:
+                    {
+                        ifstream rentalFile("RentedVehicle.txt");
+                        string record;
+                        while (getline(rentalFile, record))
+                            cout << record << endl;
+                        rentalFile.close();
+                        break;
+                    }
+                    case 2:
+                    {
+                        LoadCarData(true);
+                        LoadBikeData(true);
+                        LoadTruckData(true);
+                        break;
+                    }
+                    case 5:
+                    {
+                        double totalRevenue = 0;
+                        ifstream rentalFile("RentedVehicle.txt");
+                        string line;
+                        while (getline(rentalFile, line))
+                        {
+                            if (line.find("Total Rental Cost: $") != string::npos)
+                            {
+                                totalRevenue += stod(line.substr(line.find("$") + 1));
+                            }
+                        }
+                        std::cout << "Total Revenue: $" << totalRevenue << endl;
+                        rentalFile.close();
+                        break;
+                    }
+                    }
+                } while (AdminChoice != 6);
+                ofstream logFile("admin_log.txt", ios::app);
+                if (logFile.is_open())
+                {
+                    logFile << "Admin: " << username << endl;
+                    logFile << "---------" << ctime(nullptr) << "---------" << endl;
+                    if (AdminChoice == 1)
+                    {
+                        logFile << "Viewed the Records" << endl;
+                    }
+                    else if (AdminChoice == 2)
+                    {
+                        logFile << "Checked the Inventory" << endl;
+                    }
+                    else if (AdminChoice == 3)
+                    {
+                        logFile << "Added a Vehicle" << endl;
+                    }
+                    else if (AdminChoice == 4)
+                    {
+                        logFile << "Removed a Vehicle" << endl;
+                    }
+                    else if (AdminChoice == 5)
+                    {
+                        logFile << "Checked the Revenue" << endl;
+                    }
+                    else
+                    {
+                        logFile << "Logged Out At: " << ctime(nullptr);
                     }
                 }
-                cout << "Total Revenue: $" << totalRevenue << endl;
-                rentalFile.close();
-                break;
             }
+            else
+            {
+                std::cout << "Access denied." << endl;
+            }
+            break;
+        }
+            loadingBar();
+            std::cout << "Do you want to continue? (y/n): ";
+            char cont;
+            std::cin >> cont;
+            if (cont == 'n' || cont == 'N')
+            {
+                running = false;
             }
         }
-        else
-        {
-            cout << "Access denied." << endl;
-        }
-        break;
-        }
-        loadingBar();
-        cout << "Do you want to continue? (y/n): ";
-        char cont;
-        cin >> cont;
-        if (cont == 'n' || cont == 'N')
-    {
-        running = false;
     }
-}
 }
 
 void ThankYouMessage()
 {
     delay(100);
-    cout << "\nThank you for using the Vehicle Rental System!" << endl;
-    cout << "Have a great day!" << endl;
+    std::cout << "\nThank you for using the Vehicle Rental System!" << endl;
+    std::cout << "Have a great day!" << endl;
 }
 
 int main()

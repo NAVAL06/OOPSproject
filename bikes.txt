@@ -1,4 +1,4 @@
-B001 Ducati_Panigale 120.5 2
+B001 Ducati_Panigale 120.5 3
 B002 Harley_Iron883 95 4
 B003 Kawasaki_Ninja_400 55.75 5
 B004 Yamaha_YZF_R1 110 6
