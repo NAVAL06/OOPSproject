@@ -519,11 +519,6 @@ void vehicleMenu()
         }
         break;
         }
-        default:
-        {
-            cout << "Invalid choice." << endl;
-        }
-        }
         loadingBar();
         cout << "Do you want to continue? (y/n): ";
         char cont;
