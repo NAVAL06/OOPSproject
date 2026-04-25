@@ -1,2 +1,27 @@
+Admin: Nautical
+---------Admin: Nautical
+---------Admin: Nautical
+---------Admin: Nautical
+---------Admin: Nautical
+---------Admin: Nautical
+---------Admin: Nautical
+---------Sat Apr 25 19:42:15 2026
+---------
+Checked the Inventory
+Admin: Nautical
+Logged in at: Sat Apr 25 20:33:11 2026
 
+Checked the Revenue
+Admin: Nautical
+Logged in at: Sat Apr 25 20:33:36 2026
 
+Checked the Revenue
+Admin: Nautical
+Logged in at: Sat Apr 25 20:38:51 2026
+
+Logged out
+-----------------------------
+Admin: Nautical
+Logged in at: Sat Apr 25 20:54:18 2026
+
+Viewed the Records

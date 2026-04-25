@@ -1,0 +1,27 @@
+Ticket: C1041
+Renter Name: Naval
+Vehicle ID: C017
+Contact Number: 7849938841
+Model: Porsche_911
+Rental Duration (days): 7
+Total Rental Cost: $1050
+Rental Date: Sat Apr 25 20:08:58 2026
+-----------------------------
+Ticket: B1041
+Renter Name: Sooraj
+Vehicle ID: B008
+Contact Number: 85039758323
+Model: Triumph_Bonneville
+Rental Duration (days): 10
+Total Rental Cost: $880
+Rental Date: Sat Apr 25 20:17:39 2026
+-----------------------------
+Ticket: T1041
+Renter Name: Zidan
+Vehicle ID: T009
+Contact Number: 8899288329
+Model: Honda_Ridgeline
+Rental Duration (days): 3
+Total Rental Cost: $156
+Rental Date: Sat Apr 25 20:28:54 2026
+-----------------------------

@@ -1,3 +1,9 @@
+// Vehicle Rental System
+
+/* This program simulates a vehicle rental system where users can rent cars, bikes, and trucks.
+ It includes features for managing inventory, processing rentals and returns, and an admin menu for managing records and revenue.*/
+
+// Include necessary libraries
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,9 +13,26 @@
 #include <chrono>
 #include <thread>
 #include <cstdlib>
+#include <windows.h>
 
 using namespace std;
+// Function to set text color in the console
+void TextColour(int colour){
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colour);
+}
 
+// Helper function to print text with a typing effect
+void typeText(const string& text, int delayMs = 30)
+{
+    for (char c : text)
+    {
+        cout << c << flush;
+        this_thread::sleep_for(chrono::milliseconds(delayMs));
+    }
+    cout << endl;
+}
+
+// Vehicle class
 class Vehicle
 {
 protected:
@@ -37,6 +60,7 @@ public:
     int getStock() const { return stock; }
 };
 
+// Car class
 vector<Vehicle> LoadCarData(bool display = false)
 {
     vector<Vehicle> cars;
@@ -65,6 +89,7 @@ vector<Vehicle> LoadCarData(bool display = false)
     return cars;
 }
 
+// Bike class
 vector<Vehicle> LoadBikeData(bool display = false)
 {
     vector<Vehicle> bikes;
@@ -93,6 +118,7 @@ vector<Vehicle> LoadBikeData(bool display = false)
     return bikes;
 }
 
+// Truck class
 vector<Vehicle> LoadTruckData(bool display = false)
 {
     vector<Vehicle> trucks;
@@ -121,28 +147,55 @@ vector<Vehicle> LoadTruckData(bool display = false)
     return trucks;
 }
 
-void loadingBar()
-{
-    cout << "[";
-    for (int i = 0; i < 20; ++i)
-    {
-        cout << "#" << flush;
-        this_thread::sleep_for(chrono::milliseconds(150));
-    }
-    cout << "]" << endl;
+// Show cursor function
+void showCursor(bool show) {
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = show;
+    SetConsoleCursorInfo(out, &cursorInfo);
 }
 
+// Loading Bar function
+void loadingBar(int x,int y)
+{ 
+    showCursor(false);
+    for (int i = 0; i <=100; i++){
+        std::cout << "\r";
+        
+        int progress = i/x;
+        for (int j = 0; j < y; ++j){
+            if (j < progress) cout << "█";
+            else cout << "▒";
+        }
+        std::cout <<  "" << i << "%" << flush; 
+        this_thread::sleep_for(chrono::milliseconds(100));
+    }
+    std::cout << endl;
+    showCursor(true);
+}
+
+// Delay function for simulating processing time without output
+void delayBlank(int dt)
+{
+    this_thread::sleep_for(chrono::milliseconds(dt));
+}
+
+// Delay function for simulating processing time
 void delay(int dt)
 {
-    cout << "\n";
+    showCursor(false);
+    cout << "";
     for (int i = 0; i < 20; ++i)
     {
         cout << "." << flush;
         this_thread::sleep_for(chrono::milliseconds(dt));
     }
     cout << "" << endl;
+    showCursor(true);
 }
 
+// Main menu function
 void vehicleMenu()
 {
     int choice;
@@ -150,16 +203,16 @@ void vehicleMenu()
     while (running)
     {
 
-        cout << "\nWelcome to the Vehicle Rental System!" << endl;
-        cout << "-----------------------------" << endl;
+        typeText("\nWelcome to the Vehicle Rental System!");
+        delayBlank(100);
+        typeText("-----------------------------\n");
         cout << "---Vehicle Management Menu---" << endl;
         cout << "1.Car" << endl;
         cout << "2.Bike" << endl;
         cout << "3.Truck" << endl;
         cout << "4.Return Vehicle" << endl;
         cout << "5.Admin Menu" << endl;
-        cout << "------------------------------" << endl
-             << endl;
+        typeText("------------------------------\n");
         cout << "Enter your choice: ";
 
         if (!(cin >> choice))
@@ -169,10 +222,10 @@ void vehicleMenu()
             cin.ignore(1000, '\n');
             continue;
         }
-        delay(100);
+        delayBlank(100);
         switch (choice)
         {
-        case 1:
+        case 1:// Car Rental Process
 
         {
             cout << "Car selected." << endl
@@ -198,8 +251,9 @@ void vehicleMenu()
             }
             if (found && stock > 0)
             {
-                cout << "You have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl
+                cout << "\nYou have selected vehicle : " << vehicleID << " | " << selectedModel << ". Proceeding to rental process..." << endl
                      << endl;
+                delayBlank(100);
                 cout << "Enter rental duration in days: ";
                 int days;
                 cin >> days;
@@ -214,9 +268,11 @@ void vehicleMenu()
                 cin >> contactNumber;
                 int ticket = rand() % 9000 + 1000;
                 cout << "Making A ticket For You ";
-                delay(50);
-                cout << "Your Ticket No: C" << ticket << endl;
-
+                delayBlank(300);
+                cout << "Your Ticket No: C" ;
+                TextColour(12);
+                cout<< ticket << endl;
+                TextColour(7);
                 ofstream file("RentedVehicle.txt", ios::app);
                 if (file.is_open())
                 {
@@ -246,9 +302,11 @@ void vehicleMenu()
             {
                 cout << "Vehicle not found or out of stock." << endl;
             }
+            loadingBar (10,10);
+            cout << endl;
             break;
         }
-        case 2:
+        case 2:// Bike Rental Process
         {
             cout << "Bike selected." << endl
                  << endl;
@@ -289,7 +347,7 @@ void vehicleMenu()
                 cin >> contactNumber;
                 int ticket = rand() % 9000 + 1000;
                 cout << "Making A ticket For You ";
-                delay(50);
+                delayBlank(300);
                 cout << "Your Ticket No: B" << ticket << endl;
 
                 ofstream file("RentedVehicle.txt", ios::app);
@@ -317,9 +375,15 @@ void vehicleMenu()
                 }
                 updateFile.close();
             }
+            else
+            {
+                cout << "Vehicle not found or out of stock." << endl;
+            }
+            loadingBar (10,10);
+            cout << endl;
             break;
         }
-        case 3:
+        case 3:// Truck Rental Process
         {
             cout << "Truck selected." << endl;
             vector<Vehicle> trucks = LoadTruckData(true);
@@ -359,7 +423,8 @@ void vehicleMenu()
                 cin >> contactNumber;
                 int ticket = rand() % 9000 + 1000;
                 cout << "Making A ticket For You ";
-                delay(50);
+                delayBlank(300);
+                TextColour(12);
                 cout << "Your Ticket No: T" << ticket << endl;
 
                 ofstream file("RentedVehicle.txt", ios::app);
@@ -387,9 +452,15 @@ void vehicleMenu()
                 }
                 updateFile.close();
             }
+            else
+            {
+                cout << "Vehicle not found or out of stock." << endl;
+            }
+            loadingBar (10,10);
+            cout << endl;
             break;
         }
-        case 4:
+        case 4:// Return Vehicle Process
         {
             cout << "Return Vehicle selected.\nEnter Ticket No: ";
             string ticketNo;
@@ -491,46 +562,159 @@ void vehicleMenu()
                 }
                 file.close();
             }
+            TextColour(10);
             cout << "ThankYou for returning the vehicle" << renterName << endl;
+            TextColour(7);
+            loadingBar (10,10);
+            cout << endl;
             break;
         }
-        case 5:
+        case 5:// Admin Menu
         {
+            TextColour(10);
             string username, password;
             cout << "Username: ";
             cin >> username;
             cout << "Password: ";
             cin >> password;
+            TextColour(7);
 
             if ((username == "Employee" && password == "12345678") ||
                 (username == "Manager" && password == "manager123") ||
                 (username == "Nautical" && password == "nautyc06"))
             {
+                TextColour(10);
+                cout << "Verifying credentials" << endl;
+                delayBlank(500);
                 cout << "Access granted." << endl;
-                cout << " 1.Records\n 2.Inventory\n 3.Add\n 4.Remove\n 5.Revenue\n 6.Logout" << endl;
-                int AdminChoice;
-                cin >> AdminChoice;
-                do
+                bool adminRunning = true;
+
+                while (adminRunning)
                 {
+                    TextColour(10);
+                    cout << " 1.Records\n 2.Inventory\n 3.Add\n 4.Remove\n 5.Revenue\n 6.Logout" << endl;
+                    int AdminChoice;
+                    cin >> AdminChoice;
+
+                ofstream logFile;
+                logFile.open("admin_log.txt", ios::app);
+                logFile << "Admin: " << username << endl;
+                time_t now = time(nullptr);
+                logFile << "Logged in at: " << ctime(&now) << endl;
                     switch (AdminChoice)
                     {
-                    case 1:
+                    case 1:// View Records
                     {
                         ifstream rentalFile("RentedVehicle.txt");
                         string record;
                         while (getline(rentalFile, record))
                             cout << record << endl;
                         rentalFile.close();
+                        logFile << "Viewed the Records" << endl;
+                        cout << "Do You want to go back? (y/n): ";
+                        char cont;
+                        cin >> cont;
+                        if (cont == 'n' || cont == 'N') {
+                            adminRunning = false;
+                            cout << "Going back to admin menu..." << endl;
+                            delay (50);
+                        }
                         break;
                     }
-                    case 2:
+                    case 2:// Check Inventory
                     {
                         LoadCarData(true);
                         LoadBikeData(true);
                         LoadTruckData(true);
+                        logFile << "Checked the Inventory" << endl;
+                        cout << "Do You want to go back? (y/n): ";
+                        char cont;
+                        cin >> cont;
+                        if (cont == 'n' || cont == 'N') {
+                            adminRunning = false;
+                            cout << "Going back to admin menu..." << endl;
+                            delay (50);
+                        }
                         break;
                     }
-                    case 5:
+                    case 3:// Add Vehicle
+                    {
+                        string type, id, model;
+                        double rate;
+                        int stock;
+                        cout << "Enter vehicle type (Car/Bike/Truck): ";
+                        cin >> type;
+                        cout << "Enter vehicle ID: ";
+                        cin >> id;
+                        cout << "Enter model: ";
+                        cin >> model;
+                        cout << "Enter rental rate: ";
+                        cin >> rate;
+                        cout << "Enter stock: ";
+                        cin >> stock;
+
+                        ofstream file(type + "s.txt", ios::app);
+                        if (file.is_open())
+                        {
+                            file << id << " " << model << " " << rate << " " << stock << endl;
+                            file.close();
+                            cout << "Vehicle added successfully." << endl;
+                        }
+                        else
+                        {
+                            cout << "Error opening file!" << endl;
+                        }
+                        logFile << "Added a Vehicle" << endl;
+                        cout << "Do You want to go back? (y/n): ";
+                        char cont;
+                        cin >> cont;
+                        if (cont == 'n' || cont == 'N') {
+                            adminRunning = false;
+                            cout << "Going back to admin menu..." << endl;
+                            delay (50);
+                        }
+                        break;
+                        
+                    }
+                    case 4:// Remove Vehicle
+                    {
+                        string type, id;
+                        cout << "Enter vehicle type (Car/Bike/Truck): ";
+                        cin >> type;
+                        cout << "Enter vehicle ID to remove: ";
+                        cin >> id;
+                        string filename = type + "s.txt";
+                        ifstream file(filename);
+                        vector<string> lines;
+                        string line;
+                        while (getline(file, line))
+                        {
+                            if (line.find(id) == string::npos)
+                            {
+                                lines.push_back(line);
+                            }
+                        }
+                        file.close();
+                        ofstream outFile(filename, ios::trunc);
+                        for (const string &l : lines)
+                        {
+                            outFile << l << endl;
+                        }
+                        outFile.close();
+                        cout << "Vehicle removed successfully." << endl;
+                        logFile << "Removed Vehicle" << id << endl;
+                        cout << "Do You want to go back? (y/n): ";
+                        char cont;
+                        cin >> cont;
+                        if (cont == 'n' || cont == 'N') {
+                            adminRunning = false;
+                            cout << "Going back to admin menu..." << endl;
+                            delay (50);
+                        }
+                        break;
+
+                    }
+                    case 5:// Check Revenue
                     {
                         double totalRevenue = 0;
                         ifstream rentalFile("RentedVehicle.txt");
@@ -544,69 +728,84 @@ void vehicleMenu()
                         }
                         std::cout << "Total Revenue: $" << totalRevenue << endl;
                         rentalFile.close();
+                        logFile << "Checked the Revenue" << endl;
+                        cout << "Do You want to go back? (y/n): ";
+                        char cont;
+                        cin >> cont;
+                        if (cont == 'n' || cont == 'N') {
+                            adminRunning = false;
+                            delay (50);
+                        }
+                        else {
+                            cout << "Going back to admin menu..." << endl;
+                            delay (50);
+                        }
+                        break;
+                    }
+                    case 6:// Logout
+                    {
+                        cout << "Logging out...";
+                        delay(50);
+                        logFile << "Logged out" << endl;
+                        logFile << "-----------------------------" << endl;
+                        adminRunning = false;
+                        break;
+                    }
+                    default:
+                    {
+                        cout << "Invalid choice." << endl;
+                        adminRunning = false;
                         break;
                     }
                     }
-                } while (AdminChoice != 6);
-                ofstream logFile("admin_log.txt", ios::app);
-                if (logFile.is_open())
-                {
-                    logFile << "Admin: " << username << endl;
-                    logFile << "---------" << ctime(nullptr) << "---------" << endl;
-                    if (AdminChoice == 1)
-                    {
-                        logFile << "Viewed the Records" << endl;
-                    }
-                    else if (AdminChoice == 2)
-                    {
-                        logFile << "Checked the Inventory" << endl;
-                    }
-                    else if (AdminChoice == 3)
-                    {
-                        logFile << "Added a Vehicle" << endl;
-                    }
-                    else if (AdminChoice == 4)
-                    {
-                        logFile << "Removed a Vehicle" << endl;
-                    }
-                    else if (AdminChoice == 5)
-                    {
-                        logFile << "Checked the Revenue" << endl;
-                    }
-                    else
-                    {
-                        logFile << "Logged Out At: " << ctime(nullptr);
-                    }
+                    logFile.close();
+                    TextColour(7);
                 }
             }
             else
             {
+                TextColour(12);
+                cout << "Invalid credentials." << endl;
                 std::cout << "Access denied." << endl;
+                TextColour(7);
             }
             break;
         }
-            loadingBar();
-            std::cout << "Do you want to continue? (y/n): ";
-            char cont;
-            std::cin >> cont;
-            if (cont == 'n' || cont == 'N')
-            {
-                running = false;
-            }
+        default:
+        {
+            cout << "Invalid choice." << endl;
+            break;
+        }
+        } // End of switch statement
+        TextColour(10);
+        std::cout << "Do you want to Go Back To Main Menu? (y/n): ";
+        TextColour(7);
+        char back;
+        std::cin >> back;
+        if (back != 'y' && back != 'Y')
+        {
+            running = false;
         }
     }
-}
+}// End of vehicleMenu function
 
+// Thank you message function
 void ThankYouMessage()
 {
     delay(100);
-    std::cout << "\nThank you for using the Vehicle Rental System!" << endl;
-    std::cout << "Have a great day!" << endl;
+    cout << "\n";
+    typeText("Thank you for using the Vehicle Rental System!");
+    typeText("Have a great day!");
+    delay(100);
+    typeText("Goodbye!");
+    delay(100);
 }
 
+// Main function
 int main()
 {
-    loadingBar();
+    SetConsoleOutputCP(CP_UTF8);
+    loadingBar(5,20);
     vehicleMenu();
     ThankYouMessage();
     return 0;

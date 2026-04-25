@@ -6,7 +6,7 @@ T005 GMC_Sierra_3500HD 98.25 6
 T006 Nissan_Titan 68.4 3
 T007 Ford_Ranger 45 8
 T008 Jeep_Gladiator 65.5 4
-T009 Honda_Ridgeline 52 5
+T009 Honda_Ridgeline 52 4
 T010 Rivian_R1T_Adventure 115 6
 T011 Hummer_EV_Pickup 150 10
 T012 Peterbilt_579 250 6

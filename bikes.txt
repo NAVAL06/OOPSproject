@@ -5,7 +5,7 @@ B004 Yamaha_YZF_R1 110 6
 B005 Honda_CBR500R 48.25 5
 B006 Suzuki_Hayabusa 140 5
 B007 BMW_S1000RR 135.5 6
-B008 Triumph_Bonneville 88 3
+B008 Triumph_Bonneville 88 2
 B009 KTM_Duke_390 42 6
 B010 Indian_Scout 105.4 2
 B011 Royal_Enfield_Himalayan 35 2
