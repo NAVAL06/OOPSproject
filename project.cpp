@@ -228,8 +228,7 @@ void vehicleMenu()
         case 1:// Car Rental Process
 
         {
-            cout << "Car selected." << endl
-                 << endl;
+            cout << "Car selected." << endl;
             vector<Vehicle> cars = LoadCarData(true);
             cout << "select a vehicle to rent (enter vehicle ID): ";
             string vehicleID;
@@ -258,8 +257,8 @@ void vehicleMenu()
                 int days;
                 cin >> days;
                 double TotalRate = days * rentalRate;
-                cout << "Total rental cost: $" << TotalRate << endl
-                     << endl;
+                cout << "Total rental cost: $" << TotalRate << endl;
+                delayBlank(100);
                 cout << "Enter name for the rental agreement: ";
                 string renterName;
                 cin >> renterName;
@@ -270,9 +269,7 @@ void vehicleMenu()
                 cout << "Making A ticket For You ";
                 delayBlank(300);
                 cout << "Your Ticket No: C" ;
-                TextColour(12);
                 cout<< ticket << endl;
-                TextColour(7);
                 ofstream file("RentedVehicle.txt", ios::app);
                 if (file.is_open())
                 {
@@ -424,7 +421,6 @@ void vehicleMenu()
                 int ticket = rand() % 9000 + 1000;
                 cout << "Making A ticket For You ";
                 delayBlank(300);
-                TextColour(12);
                 cout << "Your Ticket No: T" << ticket << endl;
 
                 ofstream file("RentedVehicle.txt", ios::app);
